@@ -2,8 +2,15 @@
 class Tetris {
     constructor() {
         this.canvas = document.getElementById('game-canvas');
+        if (!this.canvas) {
+            throw new Error('game-canvas要素が見つかりません');
+        }
         this.ctx = this.canvas.getContext('2d');
+        
         this.nextCanvas = document.getElementById('next-canvas');
+        if (!this.nextCanvas) {
+            throw new Error('next-canvas要素が見つかりません');
+        }
         this.nextCtx = this.nextCanvas.getContext('2d');
         
         this.BOARD_WIDTH = 10;
@@ -43,12 +50,23 @@ class Tetris {
     }
     
     init() {
-        this.initializeBoard();
-        this.createNewPiece();
-        this.createNextPiece();
-        this.setupEventListeners();
-        this.updateDisplay();
-        this.initializeBGM();
+        try {
+            console.log('初期化開始');
+            this.initializeBoard();
+            console.log('ボード初期化完了');
+            this.createNewPiece();
+            console.log('ピース作成完了');
+            this.createNextPiece();
+            console.log('次のピース作成完了');
+            this.setupEventListeners();
+            console.log('イベントリスナー設定完了');
+            this.updateDisplay();
+            console.log('表示更新完了');
+            this.initializeBGM();
+            console.log('BGM初期化完了');
+        } catch (error) {
+            console.error('初期化エラー:', error);
+        }
     }
     
     initializeBoard() {
@@ -403,21 +421,27 @@ class Tetris {
     
     // ゲーム開始
     startGame() {
-        this.gameRunning = true;
-        this.isGameOver = false;
-        this.score = 0;
-        this.level = 1;
-        this.lines = 0;
-        this.dropInterval = 1000;
-        this.initializeBoard();
-        this.createNewPiece();
-        this.createNextPiece();
-        this.updateDisplay();
-        this.hideGameOver();
-        this.hidePauseOverlay();
-        this.stopGameOverBGM(); // ゲームオーバー用BGMを停止
-        this.playBGM(); // 通常BGMを再生
-        this.gameLoop = requestAnimationFrame((ts) => this.gameStep(ts));
+        try {
+            console.log('ゲーム開始');
+            this.gameRunning = true;
+            this.isGameOver = false;
+            this.score = 0;
+            this.level = 1;
+            this.lines = 0;
+            this.dropInterval = 1000;
+            this.initializeBoard();
+            this.createNewPiece();
+            this.createNextPiece();
+            this.updateDisplay();
+            this.hideGameOver();
+            this.hidePauseOverlay();
+            this.stopGameOverBGM(); // ゲームオーバー用BGMを停止
+            this.playBGM(); // 通常BGMを再生
+            this.gameLoop = requestAnimationFrame((ts) => this.gameStep(ts));
+            console.log('ゲーム開始完了');
+        } catch (error) {
+            console.error('ゲーム開始エラー:', error);
+        }
     }
     
     // ゲーム停止
@@ -466,9 +490,13 @@ class Tetris {
     
     // 表示更新
     updateDisplay() {
-        document.getElementById('score').textContent = this.score;
-        document.getElementById('level').textContent = this.level;
-        document.getElementById('lines').textContent = this.lines;
+        const scoreElement = document.getElementById('score');
+        const levelElement = document.getElementById('level');
+        const linesElement = document.getElementById('lines');
+        
+        if (scoreElement) scoreElement.textContent = this.score;
+        if (levelElement) levelElement.textContent = this.level;
+        if (linesElement) linesElement.textContent = this.lines;
     }
     
     // ゲームオーバー表示
@@ -1036,6 +1064,38 @@ class Tetris {
     }
 }
 
+// エラー表示機能
+function showError(message) {
+    const errorDisplay = document.getElementById('error-display');
+    const errorMessage = document.getElementById('error-message');
+    if (errorDisplay && errorMessage) {
+        errorMessage.textContent = message;
+        errorDisplay.style.display = 'flex';
+    }
+    console.error('エラー:', message);
+}
+
+// エラー表示を閉じる
+document.addEventListener('DOMContentLoaded', () => {
+    const closeErrorBtn = document.getElementById('close-error-btn');
+    if (closeErrorBtn) {
+        closeErrorBtn.addEventListener('click', () => {
+            document.getElementById('error-display').style.display = 'none';
+        });
+    }
+});
+
 // ゲーム初期化
-const game = new Tetris();
-game.startGame();
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        console.log('DOM読み込み完了、ゲーム初期化開始');
+        const game = new Tetris();
+        game.startGame();
+        console.log('ゲーム初期化完了');
+    } catch (error) {
+        console.error('ゲーム初期化エラー:', error);
+        showError(`ゲーム初期化エラー: ${error.message}`);
+        // スマホで簡単に確認するためのアラート（デバッグ用）
+        alert(`エラー: ${error.message}`);
+    }
+});
