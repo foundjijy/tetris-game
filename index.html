@@ -12,6 +12,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="テトリス">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+    
+    <!-- GitHubランキング設定 -->
+    <script src="github-ranking.js"></script>
 </head>
 <body>
     <div class="game-container">
@@ -69,6 +72,7 @@
                 </div>
                 <button id="mute-btn" class="mute-button">🔇</button>
                 <button id="show-ranking-btn" class="ranking-button">🏆 ランキング</button>
+                <button id="setup-github-btn" class="github-button">⚙️ GitHub設定</button>
             </div>
         </div>
         <div class="game-board">
@@ -104,6 +108,26 @@
                         <!-- ランキングがここに表示されます -->
                     </div>
                     <button id="close-ranking-btn">閉じる</button>
+                </div>
+            </div>
+            
+            <!-- GitHub設定モーダル -->
+            <div class="github-modal" id="github-modal">
+                <div class="github-modal-content">
+                    <h2>GitHub設定</h2>
+                    <p>リアルタイムランキングを有効にするには、GitHubの設定が必要です。</p>
+                    <div class="github-input">
+                        <label for="github-repo">リポジトリ名:</label>
+                        <input type="text" id="github-repo" placeholder="ユーザー名/リポジトリ名" value="">
+                    </div>
+                    <div class="github-input">
+                        <label for="github-token">Personal Access Token:</label>
+                        <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxx">
+                    </div>
+                    <div class="github-buttons">
+                        <button id="save-github-btn">保存</button>
+                        <button id="close-github-btn">閉じる</button>
+                    </div>
                 </div>
             </div>
             <div class="pause-overlay" id="pause-overlay">

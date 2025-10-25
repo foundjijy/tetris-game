@@ -36,6 +36,8 @@ class Tetris {
         
         // スコア記録関連
         this.highScores = this.loadHighScores();
+        this.githubRanking = null;
+        this.initGitHubRanking();
         
         this.init();
     }
@@ -558,6 +560,21 @@ class Tetris {
             this.hideRanking();
         });
         
+        // GitHub設定ボタン
+        document.getElementById('setup-github-btn').addEventListener('click', () => {
+            this.showGitHubModal();
+        });
+        
+        // GitHub設定保存ボタン
+        document.getElementById('save-github-btn').addEventListener('click', () => {
+            this.saveGitHubConfig();
+        });
+        
+        // GitHub設定閉じるボタン
+        document.getElementById('close-github-btn').addEventListener('click', () => {
+            this.hideGitHubModal();
+        });
+        
         // Enterキーでスコア保存
         document.getElementById('player-name').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -785,7 +802,7 @@ class Tetris {
     }
     
     // スコア保存処理
-    saveScore() {
+    async saveScore() {
         const playerName = document.getElementById('player-name').value.trim();
         if (!playerName) {
             alert('プレイヤー名を入力してください');
@@ -802,40 +819,84 @@ class Tetris {
             timestamp: now.getTime()
         };
         
+        // ローカルランキングにも保存
         this.highScores.push(newScore);
         this.highScores.sort((a, b) => b.score - a.score);
-        this.highScores = this.highScores.slice(0, 10); // 上位10位まで
+        this.highScores = this.highScores.slice(0, 10);
         this.saveHighScores();
+        
+        // GitHubランキングにも保存
+        if (this.githubRanking) {
+            try {
+                await this.githubRanking.saveScore(playerName, this.score);
+                console.log('GitHubランキングにスコアを保存しました');
+            } catch (error) {
+                console.error('GitHubランキング保存エラー:', error);
+            }
+        }
         
         this.hideScoreModal();
         this.showRanking();
     }
     
-    // ランキング表示更新
-    updateRankingDisplay() {
-        const rankingList = document.getElementById('ranking-list');
-        rankingList.innerHTML = '';
-        
-        if (this.highScores.length === 0) {
-            rankingList.innerHTML = '<p>まだ記録がありません</p>';
-            return;
+    // GitHubランキング初期化
+    initGitHubRanking() {
+        try {
+            if (window.GitHubRanking) {
+                this.githubRanking = new window.GitHubRanking();
+                console.log('GitHubランキング初期化完了');
+            } else {
+                console.log('GitHubランキング設定ファイルが見つかりません');
+            }
+        } catch (error) {
+            console.error('GitHubランキング初期化エラー:', error);
         }
+    }
+
+    // ランキング表示更新
+    async updateRankingDisplay() {
+        const rankingList = document.getElementById('ranking-list');
+        rankingList.innerHTML = '<p>読み込み中...</p>';
         
-        this.highScores.forEach((score, index) => {
-            const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
-            const rankNumber = index + 1;
+        try {
+            let rankings = [];
             
-            const rankingItem = document.createElement('div');
-            rankingItem.className = `ranking-item ${rankClass}`;
-            rankingItem.innerHTML = `
-                <div class="ranking-info">
-                    <div class="ranking-name">${rankNumber}位. ${score.name}</div>
-                    <div class="ranking-date">${score.date}</div>
-                </div>
-                <div class="ranking-score">${score.score.toLocaleString()}点</div>
-            `;
-            rankingList.appendChild(rankingItem);
-        });
+            // GitHubランキングから取得
+            if (this.githubRanking) {
+                rankings = await this.githubRanking.getCombinedRankings();
+            }
+            
+            // JSONランキングから取得できない場合はローカルランキングを使用
+            if (rankings.length === 0) {
+                rankings = this.highScores;
+            }
+            
+            rankingList.innerHTML = '';
+            
+            if (rankings.length === 0) {
+                rankingList.innerHTML = '<p>まだ記録がありません</p>';
+                return;
+            }
+            
+            rankings.forEach((score, index) => {
+                const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
+                const rankNumber = index + 1;
+                
+                const rankingItem = document.createElement('div');
+                rankingItem.className = `ranking-item ${rankClass}`;
+                rankingItem.innerHTML = `
+                    <div class="ranking-info">
+                        <div class="ranking-name">${rankNumber}位. ${score.name}</div>
+                        <div class="ranking-date">${score.date || score.timestamp?.toLocaleString('ja-JP')}</div>
+                    </div>
+                    <div class="ranking-score">${score.score.toLocaleString()}点</div>
+                `;
+                rankingList.appendChild(rankingItem);
+            });
+        } catch (error) {
+            console.error('ランキング表示エラー:', error);
+            rankingList.innerHTML = '<p>ランキングの読み込みに失敗しました</p>';
+        }
     }
     
     // タッチ操作のセットアップ
@@ -953,6 +1014,44 @@ class Tetris {
         this.canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
         }, { passive: false });
+    }
+    
+    // GitHub設定モーダル表示
+    showGitHubModal() {
+        document.getElementById('github-modal').style.display = 'flex';
+        // 保存された設定を読み込み
+        const savedRepo = localStorage.getItem('githubRepo');
+        const savedToken = localStorage.getItem('githubToken');
+        if (savedRepo) document.getElementById('github-repo').value = savedRepo;
+        if (savedToken) document.getElementById('github-token').value = savedToken;
+    }
+    
+    // GitHub設定モーダル非表示
+    hideGitHubModal() {
+        document.getElementById('github-modal').style.display = 'none';
+    }
+    
+    // GitHub設定保存
+    saveGitHubConfig() {
+        const repo = document.getElementById('github-repo').value.trim();
+        const token = document.getElementById('github-token').value.trim();
+        
+        if (!repo || !token) {
+            alert('リポジトリ名とトークンを入力してください');
+            return;
+        }
+        
+        // ローカルストレージに保存
+        localStorage.setItem('githubRepo', repo);
+        localStorage.setItem('githubToken', token);
+        
+        // GitHubランキングクラスに設定を適用
+        if (this.githubRanking) {
+            this.githubRanking.updateConfig(repo, token);
+        }
+        
+        alert('GitHub設定が保存されました！');
+        this.hideGitHubModal();
     }
 }
 
