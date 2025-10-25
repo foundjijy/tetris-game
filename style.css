@@ -61,8 +61,10 @@ body {
 .game-left-panel {
     display: flex;
     flex-direction: column;
-    min-width: 120px; /* 80pxから120pxに変更 */
-    margin-right: 10px; /* 右側のマージンを追加 */
+    width: 120px;          /* 固定幅で右パネルと対称に */
+    min-width: 80px;
+    margin-right: 10px;
+    align-items: center;   /* 中央揃えでラベルと値を中央に */
 }
 
 .score-display {
@@ -99,23 +101,43 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex: 1;
+    flex: 0 0 300px;       /* canvas と左右パネルの幅を明確にする */
     position: relative;
 }
 
+/* canvas の表示サイズを確実に指定 */
 #game-canvas {
+    width: 300px;
+    height: 600px;
     background: rgba(0, 0, 0, 0.8);
     border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    box-sizing: content-box;
 }
 
 /* 右パネル：次のピース */
 .game-right-panel {
     display: flex;
     flex-direction: column;
+    width: 120px;          /* 左パネルと同じ幅に */
     min-width: 80px;
-    margin-left: 10px; /* マージンを追加 */
+    margin-left: 10px;
+    align-items: center;   /* NEXT を中央に配置 */
+}
+
+/* NEXTのボックスをパネル幅に合わせ中央寄せ */
+.next-piece {
+    width: 100%;
+    max-width: 120px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
 }
 
 /* スコアボード */
@@ -1076,53 +1098,45 @@ body {
 .game-right-panel {
     display: flex;
     flex-direction: column;
+    width: 120px;          /* 左パネルと同じ幅に */
     min-width: 80px;
-    margin-left: 10px; /* マージンを追加 */
+    margin-left: 10px;
+    align-items: center;   /* NEXT を中央に配置 */
 }
 
-/* レスポンシブデザインの調整 */
+/* レスポンシブ：画面狭いときは全体を縮小 */
 @media (max-width: 768px) {
-    .game-main {
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-        padding: 5px;
-        /* max-width を追加して中央寄せを確実に */
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    
+    .game-left-panel,
     .game-right-panel {
-        width: auto;
-        min-width: auto;
-        margin-left: 5px;
-        margin-right: 10px; /* 右側のマージンを追加 */
-        display: flex;
+        width: 90px;
     }
-    
+    .game-board {
+        flex: 0 0 220px;
+    }
+    #game-canvas {
+        width: 220px;
+        height: 440px;
+    }
     .next-piece {
-        width: 60px;
-        padding: 5px;
-        margin-right: 5px; /* 右側のマージンを追加 */
+        max-width: 90px;
     }
 }
 
 @media (max-width: 480px) {
-    .game-main {
-        gap: 3px;
-        padding: 3px;
-        max-width: 460px; /* 画面サイズに合わせて調整 */
-    }
-    
+    .game-left-panel,
     .game-right-panel {
-        margin-right: 8px; /* 右側のマージンを調整 */
+        width: 72px;
     }
-    
+    .game-board {
+        flex: 0 0 160px;
+    }
+    #game-canvas {
+        width: 160px;
+        height: 320px;
+    }
     .next-piece {
-        width: 45px;
-        padding: 4px;
-        margin-right: 4px; /* 右側のマージンを調整 */
+        max-width: 72px;
+        padding: 6px;
     }
 }
 
