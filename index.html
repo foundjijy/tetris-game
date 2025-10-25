@@ -17,8 +17,9 @@
     <script src="github-ranking.js"></script>
 </head>
 <body>
-    <div class="game-container">
-        <div class="game-info">
+    <div class="mobile-game-container">
+        <!-- ヘッダー部分 -->
+        <div class="game-header">
             <h1>テトリス</h1>
             <div class="score-board">
                 <div class="score-item">
@@ -34,50 +35,53 @@
                     <span id="lines">0</span>
                 </div>
             </div>
-            <div class="next-piece">
-                <h3>次のピース</h3>
-                <canvas id="next-canvas" width="120" height="120"></canvas>
+        </div>
+        
+        <!-- メインゲームエリア -->
+        <div class="game-main">
+            <div class="game-board">
+                <canvas id="game-canvas" width="300" height="600"></canvas>
             </div>
-            <div class="controls">
-                <h3>操作方法</h3>
-                <p>← → : 移動</p>
-                <p>↓ : 高速落下</p>
-                <p>↑ : 回転</p>
-                <p>スペース : 一気に落下</p>
-                <p>P : 一時停止</p>
-            </div>
-            
-            <!-- タッチ操作コントロール -->
-            <div class="touch-controls">
-                <h3>タッチ操作</h3>
-                <div class="control-buttons">
-                    <div class="control-row">
-                        <button class="control-btn" id="move-left">←</button>
-                        <button class="control-btn" id="rotate-btn">↻</button>
-                        <button class="control-btn" id="move-right">→</button>
-                    </div>
-                    <div class="control-row">
-                        <button class="control-btn" id="soft-drop">↓</button>
-                        <button class="control-btn" id="hard-drop">⬇</button>
-                        <button class="control-btn" id="pause-btn">⏸</button>
-                    </div>
+            <div class="game-sidebar">
+                <div class="next-piece">
+                    <h3>次のピース</h3>
+                    <canvas id="next-canvas" width="80" height="80"></canvas>
                 </div>
-            </div>
-            <div class="audio-controls">
-                <h3>音声設定</h3>
-                <div class="volume-control">
-                    <label for="volume-slider">音量:</label>
-                    <input type="range" id="volume-slider" min="0" max="100" value="30">
-                    <span id="volume-value">30%</span>
+                <div class="audio-controls">
+                    <div class="volume-control">
+                        <label for="volume-slider">音量:</label>
+                        <input type="range" id="volume-slider" min="0" max="100" value="30">
+                        <span id="volume-value">30%</span>
+                    </div>
+                    <button id="mute-btn" class="mute-button">🔇</button>
                 </div>
-                <button id="mute-btn" class="mute-button">🔇</button>
-                <button id="show-ranking-btn" class="ranking-button">🏆 ランキング</button>
-                <button id="setup-github-btn" class="github-button">⚙️ GitHub設定</button>
             </div>
         </div>
-        <div class="game-board">
-            <canvas id="game-canvas" width="300" height="600"></canvas>
-            <div class="game-over" id="game-over">
+        
+        <!-- タッチ操作コントロール -->
+        <div class="touch-controls">
+            <div class="control-buttons">
+                <div class="control-row">
+                    <button class="control-btn" id="move-left">←</button>
+                    <button class="control-btn" id="rotate-btn">↻</button>
+                    <button class="control-btn" id="move-right">→</button>
+                </div>
+                <div class="control-row">
+                    <button class="control-btn" id="soft-drop">↓</button>
+                    <button class="control-btn" id="hard-drop">⬇</button>
+                    <button class="control-btn" id="pause-btn">⏸</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- メニューボタン -->
+        <div class="menu-buttons">
+            <button id="show-ranking-btn" class="ranking-button">🏆 ランキング</button>
+            <button id="setup-github-btn" class="github-button">⚙️ 設定</button>
+        </div>
+        
+        <!-- ゲームオーバー表示 -->
+        <div class="game-over" id="game-over">
                 <h2>ゲームオーバー</h2>
                 <p>最終スコア: <span id="final-score">0</span></p>
                 <button id="restart-btn">もう一度プレイ</button>
@@ -133,6 +137,28 @@
             <div class="pause-overlay" id="pause-overlay">
                 <h2>一時停止</h2>
                 <p>Pキーを押して再開</p>
+            </div>
+        </div>
+        
+        <!-- 操作方法（画面外） -->
+        <div class="off-screen-controls" id="off-screen-controls">
+            <div class="controls-content">
+                <h3>操作方法</h3>
+                <div class="control-info">
+                    <p><strong>キーボード操作:</strong></p>
+                    <p>← → : 移動</p>
+                    <p>↓ : 高速落下</p>
+                    <p>↑ : 回転</p>
+                    <p>スペース : 一気に落下</p>
+                    <p>P : 一時停止</p>
+                </div>
+                <div class="control-info">
+                    <p><strong>タッチ操作:</strong></p>
+                    <p>スワイプ : 移動・回転・落下</p>
+                    <p>タップ : 回転</p>
+                    <p>長押し : 一気に落下</p>
+                </div>
+                <button id="close-controls-btn" class="close-btn">閉じる</button>
             </div>
         </div>
     </div>

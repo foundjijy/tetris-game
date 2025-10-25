@@ -575,6 +575,28 @@ class Tetris {
             this.hideGitHubModal();
         });
         
+        // 操作方法表示ボタン（長押しで表示）
+        let showControlsTimer = null;
+        document.addEventListener('touchstart', (e) => {
+            if (e.target.closest('.game-board')) {
+                showControlsTimer = setTimeout(() => {
+                    this.showControls();
+                }, 1000); // 1秒長押し
+            }
+        });
+        
+        document.addEventListener('touchend', () => {
+            if (showControlsTimer) {
+                clearTimeout(showControlsTimer);
+                showControlsTimer = null;
+            }
+        });
+        
+        // 操作方法閉じるボタン
+        document.getElementById('close-controls-btn').addEventListener('click', () => {
+            this.hideControls();
+        });
+        
         // Enterキーでスコア保存
         document.getElementById('player-name').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -1052,6 +1074,16 @@ class Tetris {
         
         alert('GitHub設定が保存されました！');
         this.hideGitHubModal();
+    }
+    
+    // 操作方法表示
+    showControls() {
+        document.getElementById('off-screen-controls').style.display = 'flex';
+    }
+    
+    // 操作方法非表示
+    hideControls() {
+        document.getElementById('off-screen-controls').style.display = 'none';
     }
 }
 
