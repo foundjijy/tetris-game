@@ -52,20 +52,34 @@ class Tetris {
     init() {
         try {
             console.log('初期化開始');
+            updateStatus('ボード初期化中...');
             this.initializeBoard();
             console.log('ボード初期化完了');
+            
+            updateStatus('ピース作成中...');
             this.createNewPiece();
             console.log('ピース作成完了');
+            
+            updateStatus('次のピース作成中...');
             this.createNextPiece();
             console.log('次のピース作成完了');
+            
+            updateStatus('イベントリスナー設定中...');
             this.setupEventListeners();
             console.log('イベントリスナー設定完了');
+            
+            updateStatus('表示更新中...');
             this.updateDisplay();
             console.log('表示更新完了');
+            
+            updateStatus('BGM初期化中...');
             this.initializeBGM();
             console.log('BGM初期化完了');
+            
+            updateStatus('初期化完了');
         } catch (error) {
             console.error('初期化エラー:', error);
+            updateStatus('初期化エラー: ' + error.message);
         }
     }
     
@@ -613,26 +627,23 @@ class Tetris {
     
     // BGM初期化
     initializeBGM() {
-        this.bgm = new Audio('sounds/bgm.mp3');
-        this.bgm.loop = true;
-        this.bgm.volume = this.bgmVolume;
-        
-        // ゲームオーバー用BGM初期化
-        this.gameOverBgm = new Audio('sounds/gameover.mp3');
-        this.gameOverBgm.loop = true;
-        this.gameOverBgm.volume = this.bgmVolume;
-        
-        // ユーザーの最初の操作でBGMを開始（ブラウザの自動再生ポリシー対応）
-        const startBGM = () => {
-            if (this.bgm && !this.isMuted) {
-                this.bgm.play().catch(e => console.log('BGM再生エラー:', e));
-            }
-            document.removeEventListener('click', startBGM);
-            document.removeEventListener('keydown', startBGM);
-        };
-        
-        document.addEventListener('click', startBGM);
-        document.addEventListener('keydown', startBGM);
+        try {
+            this.bgm = new Audio('sounds/bgm.mp3');
+            this.bgm.loop = true;
+            this.bgm.volume = this.bgmVolume;
+            this.bgm.preload = 'auto';
+            
+            // ゲームオーバー用BGM初期化
+            this.gameOverBgm = new Audio('sounds/gameover.mp3');
+            this.gameOverBgm.loop = true;
+            this.gameOverBgm.volume = this.bgmVolume;
+            this.gameOverBgm.preload = 'auto';
+            
+            // 即座にBGMを開始（ユーザー操作なし）
+            this.playBGM();
+        } catch (error) {
+            console.error('BGM初期化エラー:', error);
+        }
     }
     
     // BGM再生
@@ -845,12 +856,9 @@ class Tetris {
     // GitHubランキング初期化
     initGitHubRanking() {
         try {
-            if (window.GitHubRanking) {
-                this.githubRanking = new window.GitHubRanking();
-                console.log('GitHubランキング初期化完了');
-            } else {
-                console.log('GitHubランキング設定ファイルが見つかりません');
-            }
+            // GitHubランキングは後で初期化（エラーを避けるため）
+            this.githubRanking = null;
+            console.log('GitHubランキング初期化をスキップ');
         } catch (error) {
             console.error('GitHubランキング初期化エラー:', error);
         }
@@ -1101,9 +1109,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ゲーム初期化
 document.addEventListener('DOMContentLoaded', () => {
+    // タイムアウト設定（10秒）
+    const timeoutId = setTimeout(() => {
+        updateStatus('初期化タイムアウト');
+        showError('初期化がタイムアウトしました。ページを再読み込みしてください。');
+    }, 10000);
+    
     try {
-        updateStatus('DOM読み込み完了、ゲーム初期化開始');
+        updateStatus('DOM読み込み完了');
         console.log('DOM読み込み完了、ゲーム初期化開始');
+        
+        // 要素の存在確認
+        const canvas = document.getElementById('game-canvas');
+        const nextCanvas = document.getElementById('next-canvas');
+        const scoreElement = document.getElementById('score');
+        
+        if (!canvas) {
+            throw new Error('game-canvas要素が見つかりません');
+        }
+        if (!nextCanvas) {
+            throw new Error('next-canvas要素が見つかりません');
+        }
+        if (!scoreElement) {
+            throw new Error('score要素が見つかりません');
+        }
+        
+        updateStatus('要素確認完了');
         
         updateStatus('ゲームクラス作成中...');
         const game = new Tetris();
@@ -1113,10 +1144,17 @@ document.addEventListener('DOMContentLoaded', () => {
         
         updateStatus('ゲーム実行中');
         console.log('ゲーム初期化完了');
+        
+        // タイムアウトをクリア
+        clearTimeout(timeoutId);
     } catch (error) {
         console.error('ゲーム初期化エラー:', error);
+        updateStatus('エラー: ' + error.message);
         showError(`ゲーム初期化エラー: ${error.message}`);
         // スマホで簡単に確認するためのアラート（デバッグ用）
         alert(`エラー: ${error.message}`);
+        
+        // タイムアウトをクリア
+        clearTimeout(timeoutId);
     }
 });
