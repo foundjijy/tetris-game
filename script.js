@@ -484,60 +484,9 @@ class Tetris {
     
     // イベントリスナー設定
     setupEventListeners() {
-        document.addEventListener('keydown', (e) => {
-            // Pキーはゲームオーバー中は無効
-            if (e.code === 'KeyP') {
-                e.preventDefault();
-                if (!this.isGameOver) {
-                    this.togglePause();
-                }
-                return;
-            }
-            
-            // その他のキーはゲーム実行中のみ処理
-            if (!this.gameRunning) return;
-            
-            switch(e.code) {
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    this.movePiece(-1, 0);
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    this.movePiece(1, 0);
-                    break;
-                case 'ArrowDown':
-                    e.preventDefault();
-                    this.movePiece(0, 1);
-                    break;
-                case 'ArrowUp':
-                    e.preventDefault();
-                    this.rotatePiece();
-                    break;
-                case 'Space':
-                    e.preventDefault();
-                    this.dropPiece();
-                    break;
-            }
-        });
         
         document.getElementById('restart-btn').addEventListener('click', () => {
             this.startGame();
-        });
-        
-        // 音量調整
-        const volumeSlider = document.getElementById('volume-slider');
-        const volumeValue = document.getElementById('volume-value');
-        
-        volumeSlider.addEventListener('input', (e) => {
-            const volume = parseInt(e.target.value) / 100;
-            this.setVolume(volume);
-            volumeValue.textContent = e.target.value + '%';
-        });
-        
-        // ミュートボタン
-        document.getElementById('mute-btn').addEventListener('click', () => {
-            this.toggleMute();
         });
         
         // ランキング表示ボタン
