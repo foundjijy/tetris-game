@@ -743,15 +743,18 @@ class Tetris {
             document.getElementById('audio-toggle-btn').textContent = '🔇 音声OFF';
             updateStatus('音声を停止しました');
         } else {
-            // 音声コンテキストの再開とBGM再生
+            // 音声コンテキストの再開
             if (this.audioContext && this.audioContext.state === 'suspended') {
                 this.audioContext.resume();
             }
-            if (!this.isGameOver) {
-                this.playBGM();
-            } else {
+            
+            // ゲームの状態に応じて適切なBGMを再生
+            if (this.isGameOver) {
                 this.playGameOverBGM();
+            } else {
+                this.playBGM();
             }
+            
             document.getElementById('audio-toggle-btn').textContent = '🔊 音声ON';
             updateStatus('音声を開始しました');
         }
@@ -760,30 +763,37 @@ class Tetris {
     // BGM再生
     playBGM() {
         if (this.bgm && !this.isMuted) {
-            // iOS Safari対応のため、Promiseでラップ
+            // ゲームオーバーBGMを停止
+            if (this.gameOverBgm) {
+                this.gameOverBgm.pause();
+                this.gameOverBgm.currentTime = 0;
+            }
+            
+            // 通常BGMを再生
             const playPromise = this.bgm.play();
             if (playPromise !== undefined) {
                 playPromise.catch(e => {
                     console.log('BGM再生エラー:', e);
-                    // エラー時は音声のアンロックが必要な可能性がある
                     this.setupAudioUnlock();
                 });
             }
         }
     }
     
-    // BGM停止
-    stopBGM() {
-        if (this.bgm) {
-            this.bgm.pause();
-            this.bgm.currentTime = 0;
-        }
-    }
-    
     // ゲームオーバー用BGM再生
     playGameOverBGM() {
         if (this.gameOverBgm && !this.isMuted) {
-            this.gameOverBgm.play().catch(e => console.log('ゲームオーバーBGM再生エラー:', e));
+            // 通常BGMを停止
+            if (this.bgm) {
+                this.bgm.pause();
+                this.bgm.currentTime = 0;
+            }
+            
+            // ゲームオーバーBGMを再生
+            this.gameOverBgm.play().catch(e => {
+                console.log('ゲームオーバーBGM再生エラー:', e);
+                this.setupAudioUnlock();
+            });
         }
     }
     
@@ -1217,15 +1227,18 @@ class Tetris {
             document.getElementById('audio-toggle-btn').textContent = '🔇 音声OFF';
             updateStatus('音声を停止しました');
         } else {
-            // 音声コンテキストの再開とBGM再生
+            // 音声コンテキストの再開
             if (this.audioContext && this.audioContext.state === 'suspended') {
                 this.audioContext.resume();
             }
-            if (!this.isGameOver) {
-                this.playBGM();
-            } else {
+            
+            // ゲームの状態に応じて適切なBGMを再生
+            if (this.isGameOver) {
                 this.playGameOverBGM();
+            } else {
+                this.playBGM();
             }
+            
             document.getElementById('audio-toggle-btn').textContent = '🔊 音声ON';
             updateStatus('音声を開始しました');
         }
