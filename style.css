@@ -965,114 +965,100 @@ body {
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
     .game-main {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-    }
-    
-    .game-left-panel, .game-right-panel {
-        width: 100%;
-        min-width: auto;
-    }
-    
-    .score-display {
-        flex-direction: row;
-        justify-content: space-around;
-    }
-    
-    .next-piece {
-        display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 5px;
+        padding: 5px;
+    }
+    
+    .game-left-panel {
+        width: auto;
+        min-width: auto;
+        margin-right: 5px;
+    }
+    
+    .score-display {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .score-item {
+        width: 60px;
+        padding: 5px;
+        font-size: 0.8em;
+    }
+    
+    .game-right-panel {
+        width: auto;
+        min-width: auto;
+        margin-left: 5px;
+        display: flex; /* 非表示から表示に変更 */
+    }
+
+    .next-piece {
+        width: 60px;
+        padding: 5px;
+    }
+
+    #next-canvas {
+        width: 50px;
+        height: 50px;
     }
     
     #game-canvas {
         width: 250px;
         height: 500px;
     }
-    
-    #next-canvas {
-        width: 50px;
-        height: 50px;
-    }
 }
 
 @media (max-width: 480px) {
-    .game-header {
-        padding: 8px 10px;
-    }
-    
-    .game-header h1 {
-        font-size: 1.5em;
+    .game-main {
+        gap: 3px;
+        padding: 3px;
     }
     
     .score-item {
-        min-width: 50px;
-        padding: 6px;
-        font-size: 0.8em;
-    }
-    
-    .score-label {
+        width: 45px;
+        padding: 4px;
         font-size: 0.7em;
     }
     
-    .score-value {
-        font-size: 1em;
+    .next-piece {
+        width: 45px;
+        padding: 4px;
+    }
+
+    #next-canvas {
+        width: 40px;
+        height: 40px;
     }
     
     #game-canvas {
         width: 200px;
         height: 400px;
     }
-    
-    #next-canvas {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .next-piece h3 {
-        font-size: 0.8em;
-    }
-    
-    .control-btn {
-        padding: 10px 12px;
-        font-size: 1em;
-        min-width: 45px;
-        min-height: 45px;
-    }
-    
-    .control-row {
-        gap: 6px;
-    }
-    
-    .game-main {
-        padding: 5px;
-        gap: 10px;
-    }
 }
 
 @media (max-width: 360px) {
-    #game-canvas {
-        width: 180px;
-        height: 360px;
+    .score-item {
+        width: 40px;
+        padding: 3px;
+        font-size: 0.6em;
     }
     
+    .next-piece {
+        width: 40px;
+        padding: 3px;
+    }
+
     #next-canvas {
         width: 35px;
         height: 35px;
     }
     
-    .control-btn {
-        min-width: 40px;
-        min-height: 40px;
-        padding: 8px 10px;
-        font-size: 0.9em;
-    }
-    
-    .score-item {
-        min-width: 45px;
-        padding: 4px;
+    #game-canvas {
+        width: 180px;
+        height: 360px;
     }
 }
