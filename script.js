@@ -46,7 +46,46 @@ class Tetris {
         this.githubRanking = null;
         this.initGitHubRanking();
         
+        // 初期化前に音声確認を行う
+        this.showAudioConfirmation();
+    }
+    
+    // 音声確認ダイアログを表示
+    showAudioConfirmation() {
+        const confirmDialog = document.createElement('div');
+        confirmDialog.className = 'audio-confirmation-dialog';
+        confirmDialog.innerHTML = `
+            <div class="audio-confirmation-content">
+                <h3>音声の設定</h3>
+                <p>ゲーム中にBGMと効果音を再生しますか？</p>
+                <div class="audio-confirmation-buttons">
+                    <button id="enable-audio-btn">はい</button>
+                    <button id="disable-audio-btn">いいえ</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(confirmDialog);
+
+        // ボタンのイベントリスナー
+        document.getElementById('enable-audio-btn').addEventListener('click', () => {
+            this.isMuted = false;
+            this.initializeAudioAndStart();
+            confirmDialog.remove();
+        });
+
+        document.getElementById('disable-audio-btn').addEventListener('click', () => {
+            this.isMuted = true;
+            document.getElementById('audio-toggle-btn').textContent = '🔇 音声OFF';
+            this.initializeAudioAndStart();
+            confirmDialog.remove();
+        });
+    }
+
+    // 音声初期化とゲーム開始
+    initializeAudioAndStart() {
+        this.initializeBGM();
         this.init();
+        this.startGame();
     }
     
     init() {

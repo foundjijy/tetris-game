@@ -986,6 +986,69 @@ body {
     background: linear-gradient(45deg, #4CAF50, #66bb6a);
 }
 
+/* 音声確認ダイアログ */
+.audio-confirmation-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+.audio-confirmation-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    max-width: 90%;
+}
+
+.audio-confirmation-content h3 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.audio-confirmation-content p {
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
+
+.audio-confirmation-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.audio-confirmation-buttons button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+#enable-audio-btn {
+    background: linear-gradient(45deg, #4CAF50, #66bb6a);
+}
+
+#disable-audio-btn {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+}
+
+.audio-confirmation-buttons button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
     .game-main {
