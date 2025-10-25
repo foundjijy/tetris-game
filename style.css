@@ -1,0 +1,589 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.game-container {
+    display: flex;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.game-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 200px;
+}
+
+.game-info h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.score-board {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.score-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.score-item:last-child {
+    margin-bottom: 0;
+}
+
+.next-piece {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+
+.next-piece h3 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+#next-canvas {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.controls {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.controls h3 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.controls p {
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.audio-controls {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.audio-controls h3 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.volume-control label {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+#volume-slider {
+    flex: 1;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #667eea;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#volume-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #667eea;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#volume-value {
+    font-size: 0.9em;
+    font-weight: bold;
+    min-width: 35px;
+}
+
+.mute-button {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.mute-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.ranking-button {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+    width: 100%;
+}
+
+.ranking-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* スコア記録モーダル */
+.score-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.score-modal-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    min-width: 300px;
+}
+
+.score-modal h2 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    font-size: 2em;
+}
+
+.score-input {
+    margin: 20px 0;
+}
+
+.score-input label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.score-input input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+}
+
+.score-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.score-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#save-score-btn {
+    background: #4CAF50;
+    color: white;
+}
+
+#skip-save-btn {
+    background: #f44336;
+    color: white;
+}
+
+.score-buttons button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ランキングモーダル */
+.ranking-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.ranking-modal-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    min-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.ranking-modal h2 {
+    color: #ffd700;
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+.ranking-list {
+    text-align: left;
+    margin: 20px 0;
+}
+
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ranking-item.rank-1 {
+    background: linear-gradient(45deg, #ffd700, #ffed4e);
+    color: #333;
+    font-weight: bold;
+}
+
+.ranking-item.rank-2 {
+    background: linear-gradient(45deg, #c0c0c0, #e8e8e8);
+    color: #333;
+    font-weight: bold;
+}
+
+.ranking-item.rank-3 {
+    background: linear-gradient(45deg, #cd7f32, #daa520);
+    color: #333;
+    font-weight: bold;
+}
+
+.ranking-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ranking-name {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.ranking-date {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.ranking-score {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+#close-ranking-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+#close-ranking-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.game-board {
+    position: relative;
+}
+
+#game-canvas {
+    background: rgba(0, 0, 0, 0.8);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: none;
+}
+
+.pause-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: none;
+}
+
+.pause-overlay h2 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    font-size: 2em;
+}
+
+.pause-overlay p {
+    margin-bottom: 0;
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+.game-over h2 {
+    color: #ff6b6b;
+    margin-bottom: 15px;
+    font-size: 2em;
+}
+
+.game-over p {
+    margin-bottom: 20px;
+    font-size: 1.2em;
+}
+
+#restart-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#restart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* テトリミノの色 */
+.tetromino-I { background-color: #00f5ff; }
+.tetromino-O { background-color: #ffff00; }
+.tetromino-T { background-color: #a000f0; }
+.tetromino-S { background-color: #00f000; }
+.tetromino-Z { background-color: #f00000; }
+.tetromino-J { background-color: #0000f0; }
+.tetromino-L { background-color: #ff7f00; }
+
+/* タッチ操作コントロール */
+.touch-controls {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.touch-controls h3 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.control-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.control-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.control-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    min-width: 50px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+#rotate-btn {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+}
+
+#hard-drop {
+    background: linear-gradient(45deg, #ffd700, #ffed4e);
+    color: #333;
+}
+
+#pause-btn {
+    background: linear-gradient(45deg, #4CAF50, #66bb6a);
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .game-info {
+        min-width: auto;
+    }
+    
+    #game-canvas {
+        width: 250px;
+        height: 500px;
+    }
+    
+    #next-canvas {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .control-btn {
+        padding: 12px 16px;
+        font-size: 1.1em;
+        min-width: 45px;
+        min-height: 45px;
+    }
+    
+    .touch-controls {
+        order: -1; /* タッチコントロールを上に移動 */
+    }
+}
+
+@media (max-width: 480px) {
+    .game-container {
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    #game-canvas {
+        width: 200px;
+        height: 400px;
+    }
+    
+    .control-btn {
+        padding: 10px 14px;
+        font-size: 1em;
+        min-width: 40px;
+        min-height: 40px;
+    }
+    
+    .control-row {
+        gap: 8px;
+    }
+}

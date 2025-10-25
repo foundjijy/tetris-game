@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>テトリス</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA用のメタタグ -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="テトリス">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-info">
+            <h1>テトリス</h1>
+            <div class="score-board">
+                <div class="score-item">
+                    <span>スコア:</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="score-item">
+                    <span>レベル:</span>
+                    <span id="level">1</span>
+                </div>
+                <div class="score-item">
+                    <span>ライン:</span>
+                    <span id="lines">0</span>
+                </div>
+            </div>
+            <div class="next-piece">
+                <h3>次のピース</h3>
+                <canvas id="next-canvas" width="120" height="120"></canvas>
+            </div>
+            <div class="controls">
+                <h3>操作方法</h3>
+                <p>← → : 移動</p>
+                <p>↓ : 高速落下</p>
+                <p>↑ : 回転</p>
+                <p>スペース : 一気に落下</p>
+                <p>P : 一時停止</p>
+            </div>
+            
+            <!-- タッチ操作コントロール -->
+            <div class="touch-controls">
+                <h3>タッチ操作</h3>
+                <div class="control-buttons">
+                    <div class="control-row">
+                        <button class="control-btn" id="move-left">←</button>
+                        <button class="control-btn" id="rotate-btn">↻</button>
+                        <button class="control-btn" id="move-right">→</button>
+                    </div>
+                    <div class="control-row">
+                        <button class="control-btn" id="soft-drop">↓</button>
+                        <button class="control-btn" id="hard-drop">⬇</button>
+                        <button class="control-btn" id="pause-btn">⏸</button>
+                    </div>
+                </div>
+            </div>
+            <div class="audio-controls">
+                <h3>音声設定</h3>
+                <div class="volume-control">
+                    <label for="volume-slider">音量:</label>
+                    <input type="range" id="volume-slider" min="0" max="100" value="30">
+                    <span id="volume-value">30%</span>
+                </div>
+                <button id="mute-btn" class="mute-button">🔇</button>
+                <button id="show-ranking-btn" class="ranking-button">🏆 ランキング</button>
+            </div>
+        </div>
+        <div class="game-board">
+            <canvas id="game-canvas" width="300" height="600"></canvas>
+            <div class="game-over" id="game-over">
+                <h2>ゲームオーバー</h2>
+                <p>最終スコア: <span id="final-score">0</span></p>
+                <button id="restart-btn">もう一度プレイ</button>
+            </div>
+            
+            <!-- スコア記録モーダル -->
+            <div class="score-modal" id="score-modal">
+                <div class="score-modal-content">
+                    <h2>スコア記録</h2>
+                    <p>おめでとうございます！</p>
+                    <p>スコア: <span id="modal-score">0</span></p>
+                    <div class="score-input">
+                        <label for="player-name">プレイヤー名:</label>
+                        <input type="text" id="player-name" placeholder="あなたの名前" maxlength="20">
+                    </div>
+                    <div class="score-buttons">
+                        <button id="save-score-btn">記録を保存</button>
+                        <button id="skip-save-btn">スキップ</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ランキング表示モーダル -->
+            <div class="ranking-modal" id="ranking-modal">
+                <div class="ranking-modal-content">
+                    <h2>ランキング</h2>
+                    <div class="ranking-list" id="ranking-list">
+                        <!-- ランキングがここに表示されます -->
+                    </div>
+                    <button id="close-ranking-btn">閉じる</button>
+                </div>
+            </div>
+            <div class="pause-overlay" id="pause-overlay">
+                <h2>一時停止</h2>
+                <p>Pキーを押して再開</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
