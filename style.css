@@ -59,7 +59,8 @@ body {
 .game-left-panel {
     display: flex;
     flex-direction: column;
-    min-width: 80px;
+    min-width: 120px; /* 80pxから120pxに変更 */
+    margin-right: 10px; /* 右側のマージンを追加 */
 }
 
 .score-display {
@@ -68,15 +69,16 @@ body {
     gap: 8px;
 }
 
+/* スコアアイテムの調整 */
 .score-item {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* 中央揃えのまま */
     background: rgba(255, 255, 255, 0.1);
-    padding: 8px;
+    padding: 8px 15px; /* 左右のパディングを増やす */
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    min-width: 60px;
+    min-width: 80px; /* 最小幅を増やす */
 }
 
 .score-label {
@@ -995,20 +997,13 @@ body {
     }
     
     .game-left-panel {
-        width: auto;
-        min-width: auto;
-        margin-right: 5px;
-    }
-    
-    .score-display {
-        flex-direction: column;
-        gap: 5px;
+        min-width: 100px; /* モバイル時は少し狭める */
+        margin-right: 8px;
     }
     
     .score-item {
-        width: 60px;
-        padding: 5px;
-        font-size: 0.8em;
+        width: 80px; /* モバイル時の幅を調整 */
+        padding: 5px 10px;
     }
     
     .game-right-panel {
@@ -1041,9 +1036,8 @@ body {
     }
     
     .score-item {
-        width: 45px;
-        padding: 4px;
-        font-size: 0.7em;
+        width: 60px;
+        padding: 4px 8px;
     }
     
     .next-piece {
