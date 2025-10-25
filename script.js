@@ -633,6 +633,11 @@ class Tetris {
     // BGM初期化
     initializeBGM() {
         try {
+            // 音声コンテキストを作成
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            this.audioContext.suspend(); // 初期状態は停止
+
+            // BGMの初期化
             this.bgm = new Audio('sounds/bgm.mp3');
             this.bgm.loop = true;
             this.bgm.volume = this.bgmVolume;
@@ -643,18 +648,88 @@ class Tetris {
             this.gameOverBgm.loop = true;
             this.gameOverBgm.volume = this.bgmVolume;
             this.gameOverBgm.preload = 'auto';
-            
-            // ユーザー操作を待つ（スマホの自動再生制限対応）
-            updateStatus('音声ボタンを押して音声を開始してください');
+
+            // 音声ボタンの初期状態を設定
+            document.getElementById('audio-toggle-btn').textContent = '🔊 音声ON';
+            updateStatus('音声の準備完了 - タップして開始');
+
+            // iOS用の音声アンロック処理
+            this.setupAudioUnlock();
         } catch (error) {
             console.error('BGM初期化エラー:', error);
         }
     }
-    
+
+    // iOS用の音声アンロック処理
+    setupAudioUnlock() {
+        const unlockAudio = () => {
+            // 音声コンテキストの再開
+            if (this.audioContext && this.audioContext.state === 'suspended') {
+                this.audioContext.resume();
+            }
+
+            // BGMの再生準備
+            if (this.bgm) {
+                this.bgm.play().then(() => {
+                    this.bgm.pause(); // 即座に一時停止
+                    this.bgm.currentTime = 0;
+                    if (!this.isGameOver && !this.isMuted) {
+                        this.playBGM(); // 実際の再生開始
+                    }
+                }).catch(e => console.log('BGM再生準備エラー:', e));
+            }
+
+            // イベントリスナーを削除
+            document.body.removeEventListener('touchstart', unlockAudio);
+            document.body.removeEventListener('click', unlockAudio);
+        };
+
+        // タッチとクリックイベントでアンロック処理を実行
+        document.body.addEventListener('touchstart', unlockAudio);
+        document.body.addEventListener('click', unlockAudio);
+    }
+
+    // 音声切り替え
+    toggleAudio() {
+        this.isMuted = !this.isMuted;
+        
+        if (this.isMuted) {
+            // 音声を停止
+            if (this.bgm) {
+                this.bgm.pause();
+            }
+            if (this.gameOverBgm) {
+                this.gameOverBgm.pause();
+            }
+            document.getElementById('audio-toggle-btn').textContent = '🔇 音声OFF';
+            updateStatus('音声を停止しました');
+        } else {
+            // 音声コンテキストの再開とBGM再生
+            if (this.audioContext && this.audioContext.state === 'suspended') {
+                this.audioContext.resume();
+            }
+            if (!this.isGameOver) {
+                this.playBGM();
+            } else {
+                this.playGameOverBGM();
+            }
+            document.getElementById('audio-toggle-btn').textContent = '🔊 音声ON';
+            updateStatus('音声を開始しました');
+        }
+    }
+
     // BGM再生
     playBGM() {
         if (this.bgm && !this.isMuted) {
-            this.bgm.play().catch(e => console.log('BGM再生エラー:', e));
+            // iOS Safari対応のため、Promiseでラップ
+            const playPromise = this.bgm.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(e => {
+                    console.log('BGM再生エラー:', e);
+                    // エラー時は音声のアンロックが必要な可能性がある
+                    this.setupAudioUnlock();
+                });
+            }
         }
     }
     
@@ -1103,8 +1178,15 @@ class Tetris {
             document.getElementById('audio-toggle-btn').textContent = '🔇 音声OFF';
             updateStatus('音声を停止しました');
         } else {
-            // 音声を開始
-            this.playBGM();
+            // 音声コンテキストの再開とBGM再生
+            if (this.audioContext && this.audioContext.state === 'suspended') {
+                this.audioContext.resume();
+            }
+            if (!this.isGameOver) {
+                this.playBGM();
+            } else {
+                this.playGameOverBGM();
+            }
             document.getElementById('audio-toggle-btn').textContent = '🔊 音声ON';
             updateStatus('音声を開始しました');
         }
