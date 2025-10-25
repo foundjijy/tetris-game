@@ -154,32 +154,30 @@ body {
 
 /* タッチ操作コントロール */
 .touch-controls {
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.2);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    touch-action: manipulation; /* ダブルタップによる拡大を防止 */
+    -webkit-touch-callout: none; /* iOS での長押しメニューを無効化 */
+    -webkit-user-select: none; /* テキスト選択を防止 */
+    user-select: none; /* テキスト選択を防止 */
 }
 
 .control-buttons {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.control-row {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
+    gap: 10px;
+    touch-action: manipulation; /* ダブルタップによる拡大を防止 */
 }
 
 .control-btn {
     background: linear-gradient(45deg, #667eea, #764ba2);
     color: white;
     border: none;
-    padding: 12px 16px;
+    padding: 15px 20px;
     border-radius: 10px;
-    font-size: 1.1em;
+    font-size: 1.2em;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -191,13 +189,20 @@ body {
     justify-content: center;
     user-select: none;
     -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    flex: 1;
+    -webkit-tap-highlight-color: transparent; /* タップ時のハイライトを無効化 */
+    -webkit-touch-callout: none; /* iOS での長押しメニューを無効化 */
+    -webkit-user-select: none; /* テキスト選択を防止 */
+    user-select: none; /* テキスト選択を防止 */
 }
 
 .control-btn:active {
     transform: scale(0.95);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 #rotate-btn {
@@ -220,6 +225,10 @@ body {
     padding: 10px;
     background: rgba(0, 0, 0, 0.2);
     border-top: 1px solid rgba(255, 255, 255, 0.2);
+    touch-action: manipulation; /* ダブルタップによる拡大を防止 */
+    -webkit-touch-callout: none; /* iOS での長押しメニューを無効化 */
+    -webkit-user-select: none; /* テキスト選択を防止 */
+    user-select: none; /* テキスト選択を防止 */
 }
 
 .ranking-button, .github-button, .audio-button {
@@ -232,6 +241,11 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     border: none;
     color: white;
+    touch-action: manipulation; /* ダブルタップによる拡大を防止 */
+    -webkit-tap-highlight-color: transparent; /* タップ時のハイライトを無効化 */
+    -webkit-touch-callout: none; /* iOS での長押しメニューを無効化 */
+    -webkit-user-select: none; /* テキスト選択を防止 */
+    user-select: none; /* テキスト選択を防止 */
 }
 
 .ranking-button {
@@ -899,6 +913,10 @@ body {
     padding: 15px;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    touch-action: manipulation; /* ダブルタップによる拡大を防止 */
+    -webkit-touch-callout: none; /* iOS での長押しメニューを無効化 */
+    -webkit-user-select: none; /* テキスト選択を防止 */
+    user-select: none; /* テキスト選択を防止 */
 }
 
 .touch-controls h3 {
@@ -910,6 +928,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    touch-action: manipulation; /* ダブルタップによる拡大を防止 */
 }
 
 .control-row {
@@ -936,7 +955,10 @@ body {
     justify-content: center;
     user-select: none;
     -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent; /* タップ時のハイライトを無効化 */
+    -webkit-touch-callout: none; /* iOS での長押しメニューを無効化 */
+    -webkit-user-select: none; /* テキスト選択を防止 */
+    user-select: none; /* テキスト選択を防止 */
 }
 
 .control-btn:active {
