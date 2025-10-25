@@ -423,6 +423,7 @@ class Tetris {
     startGame() {
         try {
             console.log('ゲーム開始');
+            updateStatus('ゲーム開始中...');
             this.gameRunning = true;
             this.isGameOver = false;
             this.score = 0;
@@ -438,9 +439,11 @@ class Tetris {
             this.stopGameOverBGM(); // ゲームオーバー用BGMを停止
             this.playBGM(); // 通常BGMを再生
             this.gameLoop = requestAnimationFrame((ts) => this.gameStep(ts));
+            updateStatus('ゲーム実行中');
             console.log('ゲーム開始完了');
         } catch (error) {
             console.error('ゲーム開始エラー:', error);
+            updateStatus('ゲーム開始エラー');
         }
     }
     
@@ -477,6 +480,7 @@ class Tetris {
     // ゲームオーバー
     gameOver() {
         this.isGameOver = true;
+        updateStatus('ゲームオーバー');
         this.stopGame();
         this.stopBGM(); // 通常BGMを停止
         this.playGameOverBGM(); // ゲームオーバー用BGMを再生
@@ -1064,6 +1068,15 @@ class Tetris {
     }
 }
 
+// ステータス表示機能
+function updateStatus(message) {
+    const statusElement = document.getElementById('game-status');
+    if (statusElement) {
+        statusElement.textContent = message;
+    }
+    console.log('ステータス:', message);
+}
+
 // エラー表示機能
 function showError(message) {
     const errorDisplay = document.getElementById('error-display');
@@ -1073,6 +1086,7 @@ function showError(message) {
         errorDisplay.style.display = 'flex';
     }
     console.error('エラー:', message);
+    updateStatus('エラーが発生しました');
 }
 
 // エラー表示を閉じる
@@ -1088,9 +1102,16 @@ document.addEventListener('DOMContentLoaded', () => {
 // ゲーム初期化
 document.addEventListener('DOMContentLoaded', () => {
     try {
+        updateStatus('DOM読み込み完了、ゲーム初期化開始');
         console.log('DOM読み込み完了、ゲーム初期化開始');
+        
+        updateStatus('ゲームクラス作成中...');
         const game = new Tetris();
+        
+        updateStatus('ゲーム開始中...');
         game.startGame();
+        
+        updateStatus('ゲーム実行中');
         console.log('ゲーム初期化完了');
     } catch (error) {
         console.error('ゲーム初期化エラー:', error);
