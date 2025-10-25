@@ -222,7 +222,7 @@ body {
     border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.ranking-button, .github-button {
+.ranking-button, .github-button, .audio-button {
     flex: 1;
     padding: 10px 16px;
     border-radius: 20px;
@@ -242,7 +242,11 @@ body {
     background: linear-gradient(45deg, #24292e, #586069);
 }
 
-.ranking-button:hover, .github-button:hover {
+.audio-button {
+    background: linear-gradient(45deg, #4CAF50, #66bb6a);
+}
+
+.ranking-button:hover, .github-button:hover, .audio-button:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }

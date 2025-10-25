@@ -592,6 +592,11 @@ class Tetris {
             this.hideControls();
         });
         
+        // 音声切り替えボタン
+        document.getElementById('audio-toggle-btn').addEventListener('click', () => {
+            this.toggleAudio();
+        });
+        
         // Enterキーでスコア保存
         document.getElementById('player-name').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -639,8 +644,8 @@ class Tetris {
             this.gameOverBgm.volume = this.bgmVolume;
             this.gameOverBgm.preload = 'auto';
             
-            // 即座にBGMを開始（ユーザー操作なし）
-            this.playBGM();
+            // ユーザー操作を待つ（スマホの自動再生制限対応）
+            updateStatus('音声ボタンを押して音声を開始してください');
         } catch (error) {
             console.error('BGM初期化エラー:', error);
         }
@@ -702,10 +707,18 @@ class Tetris {
     // 着地効果音再生
     playLandingSound() {
         if (!this.isMuted) {
-            // 新しい音声インスタンスを作成して重複再生を可能にする
-            const sound = new Audio('sounds/landing.mp3');
-            sound.volume = this.sfxVolume;
-            sound.play().catch(e => console.log('効果音再生エラー:', e));
+            try {
+                // 新しい音声インスタンスを作成して重複再生を可能にする
+                const sound = new Audio('sounds/landing.mp3');
+                sound.volume = this.sfxVolume;
+                sound.play().catch(e => {
+                    console.log('効果音再生エラー:', e);
+                    // エラーの場合はユーザーに音声ボタンを押すよう促す
+                    updateStatus('効果音を再生するには音声ボタンを押してください');
+                });
+            } catch (error) {
+                console.error('効果音作成エラー:', error);
+            }
         }
     }
     
@@ -1073,6 +1086,28 @@ class Tetris {
     // 操作方法非表示
     hideControls() {
         document.getElementById('off-screen-controls').style.display = 'none';
+    }
+    
+    // 音声切り替え
+    toggleAudio() {
+        this.isMuted = !this.isMuted;
+        
+        if (this.isMuted) {
+            // 音声を停止
+            if (this.bgm) {
+                this.bgm.pause();
+            }
+            if (this.gameOverBgm) {
+                this.gameOverBgm.pause();
+            }
+            document.getElementById('audio-toggle-btn').textContent = '🔇 音声OFF';
+            updateStatus('音声を停止しました');
+        } else {
+            // 音声を開始
+            this.playBGM();
+            document.getElementById('audio-toggle-btn').textContent = '🔊 音声ON';
+            updateStatus('音声を開始しました');
+        }
     }
 }
 
