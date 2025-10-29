@@ -213,7 +213,7 @@ body {
     /* padding: 15px 20px; */
     padding: 15px 20px;
     border-radius: 10px;
-    font-size: 1.9em;
+    font-size: 1.4em;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -1058,7 +1058,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 120px;          /* 左パネルと同じ幅に */
-    min-width: 80px;
+    min-width: 90px;
     margin-left: 10px;
     align-items: center;   /* NEXT を中央に配置 */
 }
