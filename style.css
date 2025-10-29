@@ -123,21 +123,23 @@ body {
 .game-right-panel {
     display: flex;
     flex-direction: column;
-    width: 120px;          /* 左パネルと同じ幅に */
+    width: 120px;
     min-width: 80px;
     margin-left: 10px;
-    align-items: center;   /* NEXT を中央に配置 */
+    align-items: center;
 }
 
-/* NEXTのボックスをパネル幅に合わせ中央寄せ */
+/* NEXTのボックス */
 .next-piece {
-    width: 100%;
-    max-width: 120px;
+    width: 100%;          /* 親要素いっぱいに広げる */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* スコアボード */
@@ -1057,10 +1059,23 @@ body {
 .game-right-panel {
     display: flex;
     flex-direction: column;
-    width: 120px;          /* 左パネルと同じ幅に */
-    min-width: 90px;
+    width: 120px;
+    min-width: 80px;
     margin-left: 10px;
-    align-items: center;   /* NEXT を中央に配置 */
+    align-items: center;
+}
+
+/* NEXTのボックス */
+.next-piece {
+    width: 100%;          /* 親要素いっぱいに広げる */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* レスポンシブ：画面狭いときは全体を縮小 */
@@ -1068,16 +1083,15 @@ body {
     .game-left-panel,
     .game-right-panel {
         width: 90px;
+        min-width: 90px;  /* 最小幅を設定 */
     }
-    .game-board {
-        flex: 0 0 220px;
-    }
-    #game-canvas {
-        width: 220px;
-        height: 440px;
-    }
+    
     .next-piece {
-        max-width: 90px;
+        padding: 6px;
+    }
+    
+    .next-piece h3 {
+        font-size: 0.8em;
     }
 }
 
@@ -1085,32 +1099,34 @@ body {
     .game-left-panel,
     .game-right-panel {
         width: 72px;
+        min-width: 72px;  /* 最小幅を設定 */
     }
-    .game-board {
-        flex: 0 0 160px;
-    }
-    #game-canvas {
-        width: 160px;
-        height: 320px;
-    }
+    
     .next-piece {
-        max-width: 72px;
-        padding: 6px;
+        padding: 4px;
+    }
+    
+    .next-piece h3 {
+        font-size: 0.7em;
+        margin-bottom: 4px;
     }
 }
 
 @media (max-width: 360px) {
     .game-main {
-        max-width: 340px; /* 画面サイズに合わせて調整 */
+        padding: 5px;
+        gap: 5px;
     }
     
+    .game-left-panel,
     .game-right-panel {
-        margin-right: 5px; /* 右側のマージンを調整 */
+        width: 60px;
+        min-width: 60px;  /* 最小幅を設定 */
+        margin-left: 5px;
+        margin-right: 5px;
     }
     
     .next-piece {
-        width: 40px;
         padding: 3px;
-        margin-right: 3px; /* 右側のマージンを調整 */
     }
 }
