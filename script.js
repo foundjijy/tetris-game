@@ -530,19 +530,56 @@ class Tetris {
         document.getElementById('pause-overlay').style.display = 'none';
     }
     
+    // BGM停止
+    stopBGM() {
+        if (this.bgm) {
+            this.bgm.pause();
+            this.bgm.currentTime = 0;
+        }
+    }
+
     // ゲームオーバー
     gameOver() {
+        console.log('ゲームオーバー処理開始');
         this.isGameOver = true;
         updateStatus('ゲームオーバー');
         this.stopGame();
         this.stopBGM(); // 通常BGMを停止
         this.playGameOverBGM(); // ゲームオーバー用BGMを再生
-        this.showGameOver();
-        
-        // スコア記録モーダルを表示
+
+        // ゲームオーバー表示を確実に行う
+        const gameOverElement = document.getElementById('game-over');
+        if (gameOverElement) {
+            const finalScoreElement = document.getElementById('final-score');
+            if (finalScoreElement) {
+                finalScoreElement.textContent = this.score;
+            }
+            gameOverElement.style.display = 'block';
+            console.log('ゲームオーバー画面を表示');
+        } else {
+            console.error('game-over要素が見つかりません');
+        }
+
+        // スコアモーダルの表示
         setTimeout(() => {
-            this.showScoreModal();
-        }, 1000);
+            const scoreModal = document.getElementById('score-modal');
+            if (scoreModal) {
+                const modalScoreElement = document.getElementById('modal-score');
+                if (modalScoreElement) {
+                    modalScoreElement.textContent = this.score;
+                }
+                scoreModal.style.display = 'flex';
+                
+                // プレイヤー名入力フィールドにフォーカス
+                const playerNameInput = document.getElementById('player-name');
+                if (playerNameInput) {
+                    playerNameInput.focus();
+                }
+                console.log('スコアモーダルを表示');
+            } else {
+                console.error('スコアモーダルが見つかりません');
+            }
+        }, 1500);
     }
     
     // 表示更新
@@ -814,7 +851,6 @@ class Tetris {
         if (this.gameOverBgm) {
             this.gameOverBgm.muted = this.isMuted;
         }
-        this.updateMuteButton();
     }
     
     // 音量調整
@@ -843,14 +879,6 @@ class Tetris {
             } catch (error) {
                 console.error('効果音作成エラー:', error);
             }
-        }
-    }
-    
-    // ミュートボタン更新
-    updateMuteButton() {
-        const muteBtn = document.getElementById('mute-btn');
-        if (muteBtn) {
-            muteBtn.textContent = this.isMuted ? '🔊' : '🔇';
         }
     }
     
@@ -1210,38 +1238,6 @@ class Tetris {
     // 操作方法非表示
     hideControls() {
         document.getElementById('off-screen-controls').style.display = 'none';
-    }
-    
-    // 音声切り替え
-    toggleAudio() {
-        this.isMuted = !this.isMuted;
-        
-        if (this.isMuted) {
-            // 音声を停止
-            if (this.bgm) {
-                this.bgm.pause();
-            }
-            if (this.gameOverBgm) {
-                this.gameOverBgm.pause();
-            }
-            document.getElementById('audio-toggle-btn').textContent = '🔇 音声OFF';
-            updateStatus('音声を停止しました');
-        } else {
-            // 音声コンテキストの再開
-            if (this.audioContext && this.audioContext.state === 'suspended') {
-                this.audioContext.resume();
-            }
-            
-            // ゲームの状態に応じて適切なBGMを再生
-            if (this.isGameOver) {
-                this.playGameOverBGM();
-            } else {
-                this.playBGM();
-            }
-            
-            document.getElementById('audio-toggle-btn').textContent = '🔊 音声ON';
-            updateStatus('音声を開始しました');
-        }
     }
 }
 

@@ -581,7 +581,7 @@ body {
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 2000;
 }
 
 .score-modal-content {
@@ -593,21 +593,8 @@ body {
     min-width: 300px;
 }
 
-.score-modal h2 {
-    color: #ffd700;
-    margin-bottom: 15px;
-    font-size: 2em;
-}
-
 .score-input {
     margin: 20px 0;
-}
-
-.score-input label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 1.1em;
-    font-weight: bold;
 }
 
 .score-input input {
@@ -619,37 +606,7 @@ body {
     text-align: center;
     background: rgba(255, 255, 255, 0.9);
     color: #333;
-}
-
-.score-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.score-buttons button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-#save-score-btn {
-    background: #4CAF50;
-    color: white;
-}
-
-#skip-save-btn {
-    background: #f44336;
-    color: white;
-}
-
-.score-buttons button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
 }
 
 /* ランキングモーダル */
@@ -878,6 +835,7 @@ body {
     text-align: center;
     border: 2px solid rgba(255, 255, 255, 0.3);
     display: none;
+    z-index: 1000;
 }
 
 .pause-overlay {
