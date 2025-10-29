@@ -49,8 +49,8 @@ body {
 .game-main {
     display: flex;
     flex: 1;
-    padding: 10px;
-    gap: 10px;
+    padding: 8px;                     /* 全体のパディングを少し縮小 */
+    gap: clamp(6px, 2.5vw, 12px);     /* 画面幅に応じて余白を調整 */
     align-items: center;
     justify-content: center;
     max-width: 100%;
@@ -61,85 +61,61 @@ body {
 .game-left-panel {
     display: flex;
     flex-direction: column;
-    width: 120px;          /* 固定幅で右パネルと対称に */
-    min-width: 80px;
-    margin-right: 10px;
-    align-items: center;   /* 中央揃えでラベルと値を中央に */
-}
-
-.score-display {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-/* スコアアイテムの調整 */
-.score-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 中央揃えのまま */
-    background: rgba(255, 255, 255, 0.1);
-    padding: 8px 15px; /* 左右のパディングを増やす */
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    min-width: 80px; /* 最小幅を増やす */
-}
-
-.score-label {
-    font-size: 0.8em;
-    opacity: 0.8;
-    margin-bottom: 4px;
-}
-
-.score-value {
-    font-size: 1.1em;
-    font-weight: bold;
-}
-
-/* 中央：ゲーム画面 */
-.game-board {
-    display: flex;
-    justify-content: center;
+    width: clamp(56px, 14vw, 120px);  /* 最小56px〜最大120px、画面比率で調整 */
+    min-width: 56px;
+    margin-right: 6px;                /* 右側の余白を小さくしてキャンバスに近づける */
     align-items: center;
-    flex: 0 0 300px;       /* canvas と左右パネルの幅を明確にする */
-    position: relative;
-}
-
-/* canvas の表示サイズを確実に指定 */
-#game-canvas {
-    width: 300px;
-    height: 600px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    display: block;
-    margin: 0 auto;
-    max-width: 100%;
-    box-sizing: content-box;
+    box-sizing: border-box;
 }
 
 /* 右パネル：次のピース */
 .game-right-panel {
     display: flex;
     flex-direction: column;
-    width: 120px;
-    min-width: 80px;
-    margin-left: 10px;
+    width: clamp(56px, 14vw, 120px);  /* 左パネルと同じ調整 */
+    min-width: 56px;
+    margin-left: 6px;                 /* 左側の余白を小さくしてキャンバスに近づける */
     align-items: center;
+    box-sizing: border-box;
 }
 
-/* NEXTのボックス */
+/* 中央：ゲーム画面を柔軟に */
+.game-board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 auto;                   /* 可変にして左右パネルのサイズに合わせる */
+    max-width: 640px;                 /* 大きな画面での上限 */
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* canvas の表示サイズ（レスポンシブ） */
+#game-canvas {
+    width: min(260px, 48vw);          /* 画面幅に応じて縮小、中央に寄せやすくする */
+    height: auto;
+    aspect-ratio: 1/2;                /* キャンバス比を維持（300x600相当） */
+    max-height: 80vh;
+    background: rgba(0, 0, 0, 0.8);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    display: block;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* NEXTのボックス：親幅いっぱいに */
 .next-piece {
-    width: 100%;          /* 親要素いっぱいに広げる */
+    width: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0;               /* ボックスを消すので余白は最小化 */
+    background: transparent;  /* 白い半透明背景を削除 */
+    border-radius: 0;         /* 角丸を解除（必要なら調整） */
+    border: none;             /* 枠線を削除 */
 }
 
 /* スコアボード */
@@ -1047,86 +1023,119 @@ body {
 .game-main {
     display: flex;
     flex: 1;
-    padding: 10px;
-    gap: 10px;
+    padding: 8px;                     /* 全体のパディングを少し縮小 */
+    gap: clamp(6px, 2.5vw, 12px);     /* 画面幅に応じて余白を調整 */
     align-items: center;
     justify-content: center;
     max-width: 100%;
     margin: 0 auto;
 }
 
+/* 左パネル：スコア表示 */
+.game-left-panel {
+    display: flex;
+    flex-direction: column;
+    width: clamp(56px, 14vw, 120px);  /* 最小56px〜最大120px、画面比率で調整 */
+    min-width: 56px;
+    margin-right: 6px;                /* 右側の余白を小さくしてキャンバスに近づける */
+    align-items: center;
+    box-sizing: border-box;
+}
+
 /* 右パネル：次のピース */
 .game-right-panel {
     display: flex;
     flex-direction: column;
-    width: 120px;
-    min-width: 80px;
-    margin-left: 10px;
+    width: clamp(56px, 14vw, 120px);  /* 左パネルと同じ調整 */
+    min-width: 56px;
+    margin-left: 6px;                 /* 左側の余白を小さくしてキャンバスに近づける */
     align-items: center;
+    box-sizing: border-box;
 }
 
-/* NEXTのボックス */
+/* 中央：ゲーム画面を柔軟に */
+.game-board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 auto;                   /* 可変にして左右パネルのサイズに合わせる */
+    max-width: 640px;                 /* 大きな画面での上限 */
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* canvas の表示サイズ（レスポンシブ） */
+#game-canvas {
+    width: min(260px, 48vw);          /* 画面幅に応じて縮小、中央に寄せやすくする */
+    height: auto;
+    aspect-ratio: 1/2;                /* キャンバス比を維持（300x600相当） */
+    max-height: 80vh;
+    background: rgba(0, 0, 0, 0.8);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    display: block;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* NEXTのボックス：親幅いっぱいに */
 .next-piece {
-    width: 100%;          /* 親要素いっぱいに広げる */
+    width: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0;               /* ボックスを消すので余白は最小化 */
+    background: transparent;  /* 白い半透明背景を削除 */
+    border-radius: 0;         /* 角丸を解除（必要なら調整） */
+    border: none;             /* 枠線を削除 */
 }
 
-/* レスポンシブ：画面狭いときは全体を縮小 */
-@media (max-width: 768px) {
+/* 小さい画面用にさらに調整（iPhone含む） */
+@media (max-width: 420px) {
+    .game-main {
+        padding: 6px;
+        gap: 6px;
+    }
+
     .game-left-panel,
     .game-right-panel {
-        width: 90px;
-        min-width: 90px;  /* 最小幅を設定 */
+        width: clamp(48px, 16vw, 80px);  /* さらに小さくしてキャンバス寄せ */
+        min-width: 48px;
+        margin-left: 4px;
+        margin-right: 4px;
     }
-    
+
+    .game-board {
+        max-width: calc(100vw -  (2 * 56px) - 24px); /* おおよその余白を確保して中央領域を拡張 */
+    }
+
+    #game-canvas {
+        width: min(220px, 58vw);
+        max-height: 75vh;
+    }
+
     .next-piece {
         padding: 6px;
     }
-    
+
     .next-piece h3 {
-        font-size: 0.8em;
+        font-size: 0.85em;
     }
 }
 
-@media (max-width: 480px) {
-    .game-left-panel,
-    .game-right-panel {
-        width: 72px;
-        min-width: 72px;  /* 最小幅を設定 */
-    }
-    
-    .next-piece {
-        padding: 4px;
-    }
-    
-    .next-piece h3 {
-        font-size: 0.7em;
-        margin-bottom: 4px;
-    }
-}
-
+/* 極小画面向け */
 @media (max-width: 360px) {
-    .game-main {
-        padding: 5px;
-        gap: 5px;
-    }
-    
     .game-left-panel,
     .game-right-panel {
-        width: 60px;
-        min-width: 60px;  /* 最小幅を設定 */
-        margin-left: 5px;
-        margin-right: 5px;
+        width: 52px;
+        min-width: 48px;
+        margin-left: 3px;
+        margin-right: 3px;
     }
-    
-    .next-piece {
-        padding: 3px;
+
+    #game-canvas {
+        width: min(200px, 60vw);
     }
 }
