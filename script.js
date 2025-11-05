@@ -459,6 +459,9 @@ class Tetris {
             }
         }
         
+        // 影（ゴースト）を先に描画して、現在のピースが上に来るようにする
+        this.drawGhostPiece();
+        
         // 点数表示アニメーションの描画
         this.drawScoreAnimations();
     }
@@ -1289,6 +1292,87 @@ class Tetris {
     // 操作方法非表示
     hideControls() {
         document.getElementById('off-screen-controls').style.display = 'none';
+    }
+    
+    // ヘルパー：指定位置に指定形状を置けるか確認（ボード境界と既存ブロックをチェック）
+    _canPlaceAt(shape, x, y) {
+        const board = this.board; // 既存の盤面配列 (rows x cols)
+        const H = this.BOARD_HEIGHT;
+        const W = this.BOARD_WIDTH;
+        for (let r = 0; r < shape.length; r++) {
+            for (let c = 0; c < shape[r].length; c++) {
+                if (!shape[r][c]) continue;
+                const bx = x + c;
+                const by = y + r;
+                if (bx < 0 || bx >= W || by < 0 || by >= H) return false;
+                if (board[by] && board[by][bx]) return false;
+            }
+        }
+        return true;
+    }
+
+    // 指定ピースが落下したときに到達するY座標を返す
+    _computeDropY(piece) {
+        if (!piece) return 0;
+        let testY = piece.y;
+        // 深追いして衝突する直前の位置を探す
+        while (this._canPlaceAt(piece.shape, piece.x, testY + 1)) {
+            testY++;
+        }
+        return testY;
+    }
+
+    // ゴースト（影）を描画する。現在の描画処理内で currentPiece の前に呼ぶこと。
+    drawGhostPiece() {
+        const piece = this.currentPiece;
+        if (!piece) return;
+
+        // 主要な canvas / ctx 名称に合わせて取得（既存コードの命名に依存）
+        const canvas = this.gameCanvas || this.canvas || this.boardCanvas || this.gameBoardCanvas;
+        const ctx = this.ctx || this.context || this.gameCtx || this.boardCtx;
+        if (!canvas || !ctx) return;
+
+        const dropY = this._computeDropY(piece);
+        // 落下位置が現在位置と同じなら表示を省略
+        if (dropY === piece.y) return;
+
+        // セルサイズの算出（既存の定義があれば使用）
+        const blockSize = this.BLOCK_SIZE || Math.floor(canvas.width / this.BOARD_WIDTH) || 20;
+
+        ctx.save();
+        ctx.globalAlpha = 0.28; // 影の透過率（調整可能）
+        ctx.fillStyle = piece.color || '#ffffff';
+        for (let r = 0; r < piece.shape.length; r++) {
+            for (let c = 0; c < piece.shape[r].length; c++) {
+                if (!piece.shape[r][c]) continue;
+                const drawX = (piece.x + c) * blockSize;
+                const drawY = (dropY + r) * blockSize;
+                ctx.fillRect(
+                    Math.round(drawX),
+                    Math.round(drawY),
+                    Math.max(1, blockSize - 1),
+                    Math.max(1, blockSize - 1)
+                );
+            }
+        }
+        // 輪郭を薄く描く（任意）
+        ctx.globalAlpha = 0.6;
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 1;
+        for (let r = 0; r < piece.shape.length; r++) {
+            for (let c = 0; c < piece.shape[r].length; c++) {
+                if (!piece.shape[r][c]) continue;
+                const drawX = (piece.x + c) * blockSize;
+                const drawY = (dropY + r) * blockSize;
+                ctx.strokeRect(
+                    Math.round(drawX) + 0.5,
+                    Math.round(drawY) + 0.5,
+                    Math.max(1, blockSize - 1),
+                    Math.max(1, blockSize - 1)
+                );
+            }
+        }
+        ctx.restore();
     }
 }
 
