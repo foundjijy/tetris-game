@@ -54,9 +54,9 @@
             <div class="game-board">
                 <canvas id="game-canvas" width="300" height="600"></canvas>
                 <div class="game-over" id="game-over">
-                    <h2>ゲームオーバー</h2>
-                    <p>最終スコア: <span id="final-score">0</span></p>
-                    <button id="restart-btn">もう一度プレイ</button>
+                    <h2>GAMEOVER</h2>
+                    <p>Final Score: <span id="final-score">0</span></p>
+                    <button id="restart-btn">Retry</button>
                 </div>
             </div>
             
@@ -78,18 +78,19 @@
                     <button class="control-btn" id="move-right">→</button>
                 </div>
                 <div class="control-row">
+                    <button class="control-btn" id="hard-drop-left">⬇️</button>
                     <button class="control-btn" id="soft-drop">↓</button>
-                    <button class="control-btn" id="hard-drop">⬇</button>
-                    <button class="control-btn" id="pause-btn">⏸</button>
+                    <button class="control-btn" id="hard-drop-right">⬇️</button>
                 </div>
             </div>
         </div>
         
         <!-- メニューボタン -->
         <div class="menu-buttons">
-            <button id="show-ranking-btn" class="ranking-button">🏆 ランキング</button>
-            <button id="setup-github-btn" class="github-button">⚙️ 設定</button>
+            <button id="show-ranking-btn" class="ranking-button">🏆</button>
+            <button id="setup-github-btn" class="github-button">⚙️</button>
             <button id="audio-toggle-btn" class="audio-button">🔊 音声ON</button>
+            <button class="control-btn" id="pause-btn">⏸️</button>
         </div>
         
         <!-- スコア記録モーダル -->

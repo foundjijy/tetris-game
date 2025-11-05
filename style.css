@@ -188,7 +188,6 @@ body {
     background: linear-gradient(45deg, #667eea, #764ba2);
     color: white;
     border: none;
-    /* padding: 15px 20px; */
     padding: 15px 20px;
     border-radius: 10px;
     font-size: 1.4em;
@@ -197,6 +196,8 @@ body {
     transition: all 0.2s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     min-width: 50px;
+    width : 90px;
+    height : 60px;
     min-height: 50px;
     display: flex;
     align-items: center;
@@ -220,12 +221,11 @@ body {
 }
 
 #rotate-btn {
-    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    background: linear-gradient(45deg, #800000, #ff00ff);
 }
 
-#hard-drop {
-    background: linear-gradient(45deg, #ffd700, #ffed4e);
-    color: #333;
+#hard-drop-left, #hard-drop-right {
+    background: linear-gradient(45deg, #20b2aa, #00ffff);
 }
 
 #pause-btn {

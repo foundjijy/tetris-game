@@ -1102,7 +1102,13 @@ class Tetris {
             }
         });
         
-        document.getElementById('hard-drop').addEventListener('click', () => {
+        document.getElementById('hard-drop-left').addEventListener('click', () => {
+            if (this.gameRunning) {
+                this.dropPiece();
+            }
+        });
+
+        document.getElementById('hard-drop-right').addEventListener('click', () => {
             if (this.gameRunning) {
                 this.dropPiece();
             }
