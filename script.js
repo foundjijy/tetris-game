@@ -20,6 +20,12 @@ class Tetris {
         this.board = [];
         this.currentPiece = null;
         this.nextPiece = null;
+        this.nextQueue = [];
+        this.NEXT_COUNT = 3; // 表示する NEXT の数
+        // 初期キューを作成（コンストラクタ内で一括補充）
+        for (let i = 0; i < this.NEXT_COUNT; i++) {
+            this._pushRandomNext();
+        }
         this.score = 0;
         this.level = 1;
         this.lines = 0;
@@ -187,11 +193,29 @@ class Tetris {
     }
     
     createNewPiece() {
+        // NEXT キューの先頭を現在のピースにする（常にキューの一番上を採用）
+        if (this.nextQueue && this.nextQueue.length > 0) {
+            const next = this.nextQueue.shift();
+            // shape をコピーして安全に扱う
+            const shapeCopy = next.shape.map(row => Array.isArray(row) ? row.slice() : row);
+            this.currentPiece = {
+                shape: shapeCopy,
+                color: next.color,
+                x: Math.floor(this.BOARD_WIDTH / 2) - Math.floor(shapeCopy[0].length / 2),
+                y: 0,
+                type: next.type
+            };
+            // キューが上に詰まるように、新しいピースを下に追加して補充
+            this._pushRandomNext();
+            this.drawNextPiece();
+            return;
+        }
+
+        // フォールバック：ランダム生成（キューが未初期化のとき）
         const shapes = this.getTetrominoShapes();
         const colors = this.getTetrominoColors();
         const types = Object.keys(shapes);
         const randomType = types[Math.floor(Math.random() * types.length)];
-        
         this.currentPiece = {
             shape: shapes[randomType],
             color: colors[randomType],
@@ -199,40 +223,61 @@ class Tetris {
             y: 0,
             type: randomType
         };
+        // フォールバック後もキューを補充
+        this._pushRandomNext();
+        this.drawNextPiece();
     }
     
+    // 既存コードから名前が呼ばれている場合に互換のために残す（1つ追加してキューを保つ）
     createNextPiece() {
+        this._pushRandomNext();
+        // nextPiece は互換性のために先頭を指す
+        this.nextPiece = this.nextQueue[0] || null;
+        this.drawNextPiece();
+    }
+
+    // 内部ユーティリティ：ランダム next をキューの末尾に追加し、長さを保つ
+    _pushRandomNext() {
         const shapes = this.getTetrominoShapes();
         const colors = this.getTetrominoColors();
         const types = Object.keys(shapes);
         const randomType = types[Math.floor(Math.random() * types.length)];
-        
-        this.nextPiece = {
+        this.nextQueue.push({
             shape: shapes[randomType],
             color: colors[randomType],
             type: randomType
-        };
-        
-        this.drawNextPiece();
+        });
+        // 必要なら古い要素を削除して長さを NEXT_COUNT に保つ
+        while (this.nextQueue.length > this.NEXT_COUNT) {
+            this.nextQueue.shift();
+        }
     }
     
     drawNextPiece() {
         this.nextCtx.clearRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
-        
-        if (this.nextPiece) {
-            const blockSize = 20;
-            const offsetX = (this.nextCanvas.width - this.nextPiece.shape[0].length * blockSize) / 2;
-            const offsetY = (this.nextCanvas.height - this.nextPiece.shape.length * blockSize) / 2;
-            
-            for (let y = 0; y < this.nextPiece.shape.length; y++) {
-                for (let x = 0; x < this.nextPiece.shape[y].length; x++) {
-                    if (this.nextPiece.shape[y][x]) {
-                        this.nextCtx.fillStyle = this.nextPiece.color;
+        if (!this.nextQueue || this.nextQueue.length === 0) return;
+
+        const count = Math.min(this.nextQueue.length, this.NEXT_COUNT);
+        const perHeight = this.nextCanvas.height / count;
+        for (let i = 0; i < count; i++) {
+            const piece = this.nextQueue[i];
+            if (!piece) continue;
+            const rows = piece.shape.length;
+            const cols = piece.shape[0].length;
+            const blockSize = Math.floor(Math.min(this.nextCanvas.width / (cols + 1), perHeight / (rows + 1)));
+            const pieceWidthPx = cols * blockSize;
+            const pieceHeightPx = rows * blockSize;
+            const offsetX = (this.nextCanvas.width - pieceWidthPx) / 2;
+            const offsetY = i * perHeight + (perHeight - pieceHeightPx) / 2;
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    if (piece.shape[y][x]) {
+                        this.nextCtx.fillStyle = piece.color;
                         this.nextCtx.fillRect(
-                            offsetX + x * blockSize,
-                            offsetY + y * blockSize,
-                            blockSize - 1,
-                            blockSize - 1
+                            Math.round(offsetX + x * blockSize),
+                            Math.round(offsetY + y * blockSize),
+                            Math.max(1, blockSize - 1),
+                            Math.max(1, blockSize - 1)
                         );
                     }
                 }
